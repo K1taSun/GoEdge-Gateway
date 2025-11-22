@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: goedge
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  mqtt-broker:
+    image: eclipse-mosquitto:2
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./deployments/docker/mosquitto/config:/mosquitto/config
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+
+  # Placeholder for services
+  # mqtt-ingestor:
+  #   build:
+  #     context: .
+  #     dockerfile: deployments/docker/mqtt-ingestor.Dockerfile
+  #   depends_on:
+  #     - mqtt-broker
+  #     - postgres
+
+  # storage-service:
+  #   build:
+  #     context: .
+  #     dockerfile: deployments/docker/storage-service.Dockerfile
+  #   depends_on:
+  #     - postgres
+
+volumes:
+  postgres_data:
+  mosquitto_data:
+  mosquitto_log:
+

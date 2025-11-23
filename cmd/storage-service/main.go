@@ -2,9 +2,13 @@ package main
 
 import (
 	"log"
-	"net/http"
+	"net"
 
+	"github.com/k1tasun/GoEdge-Gateway/api/proto"
 	"github.com/k1tasun/GoEdge-Gateway/internal/config"
+	"github.com/k1tasun/GoEdge-Gateway/internal/server"
+	"github.com/k1tasun/GoEdge-Gateway/internal/storage/postgres"
+	"google.golang.org/grpc"
 )
 
 func main() {
@@ -12,18 +16,27 @@ func main() {
 
 	log.Printf("Starting Storage Service on port %s", cfg.ServerPort)
 
-	// TODO: Initialize Database connection
-	// db := postgres.NewConnection(cfg.DatabaseURL)
+	// Initialize Database
+	db, err := postgres.NewConnection(cfg.DatabaseURL)
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+	defer db.Close()
 
-	// TODO: Setup gRPC server or HTTP handlers
+	repo := postgres.NewRepository(db)
 
-	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
-	})
+	// Setup gRPC server
+	lis, err := net.Listen("tcp", ":"+cfg.ServerPort)
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
 
-	if err := http.ListenAndServe(":"+cfg.ServerPort, nil); err != nil {
-		log.Fatalf("Failed to start server: %v", err)
+	grpcServer := grpc.NewServer()
+	gatewayServer := server.NewGatewayServer(repo)
+	proto.RegisterStorageServiceServer(grpcServer, gatewayServer)
+
+	log.Printf("gRPC server listening on :%s", cfg.ServerPort)
+	if err := grpcServer.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
 	}
 }
-

@@ -1,4 +1,4 @@
-.PHONY: all build test clean run-infra stop-infra
+.PHONY: all build test clean run-infra stop-infra gen-proto
 
 all: build
 
@@ -18,3 +18,8 @@ run-infra:
 stop-infra:
 	docker-compose down
 
+gen-proto:
+	docker run --rm -v $(PWD):/workspace -w /workspace rvolosatovs/protoc:4.0.0 \
+		--proto_path=. --go_out=. --go_opt=paths=source_relative \
+		--go-grpc_out=. --go-grpc_opt=paths=source_relative \
+		api/proto/gateway.proto

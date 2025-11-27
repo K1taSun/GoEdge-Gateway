@@ -6,21 +6,17 @@ option go_package = "github.com/k1tasun/GoEdge-Gateway/api/proto";
 
 import "google/protobuf/timestamp.proto";
 
-// StorageService defines the service for storing sensor data.
 service StorageService {
-  // StoreReading saves a single sensor reading.
   rpc StoreReading(StoreReadingRequest) returns (StoreReadingResponse);
-  
-  // StoreBatch saves multiple readings (for efficiency).
   rpc StoreBatch(StoreBatchRequest) returns (StoreBatchResponse);
 }
 
 message SensorReading {
   string device_id = 1;
-  string type = 2;        // e.g., "temperature", "humidity"
+  string type = 2;
   double value = 3;
   google.protobuf.Timestamp timestamp = 4;
-  string unit = 5;        // e.g., "C", "%"
+  string unit = 5;
 }
 
 message StoreReadingRequest {
@@ -40,4 +36,3 @@ message StoreBatchResponse {
   int32 count = 1;
   bool success = 2;
 }
-

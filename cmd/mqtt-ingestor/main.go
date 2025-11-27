@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"log"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -18,52 +18,50 @@ import (
 )
 
 func main() {
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	slog.SetDefault(logger)
+
 	cfg := config.Load()
+	slog.Info("starting mqtt ingestor", "broker", cfg.MQTTBroker)
 
-	log.Printf("Starting MQTT Ingestor connected to %s", cfg.MQTTBroker)
-
-	// Connect to gRPC Storage Service
 	conn, err := grpc.NewClient("localhost:"+cfg.ServerPort, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		slog.Error("failed to connect to storage service", "error", err)
+		os.Exit(1)
 	}
 	defer conn.Close()
 	client := proto.NewStorageServiceClient(conn)
 
-	// Initialize MQTT Ingestor
 	ingestor, err := mqtt.NewIngestor(cfg.MQTTBroker, "goedge-ingestor", cfg.MQUITTopic)
 	if err != nil {
-		log.Fatalf("Failed to create MQTT ingestor: %v", err)
+		slog.Error("failed to create mqtt ingestor", "error", err)
+		os.Exit(1)
 	}
 	defer ingestor.Close()
 
-	// Handle incoming readings
-	handler := func(reading *models.SensorReading) {
+	if err := ingestor.Start(func(reading *models.SensorReading) {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
 
-		pbReading := &proto.SensorReading{
-			DeviceId:  reading.DeviceID,
-			Type:      reading.Type,
-			Value:     reading.Value,
-			Unit:      reading.Unit,
-			Timestamp: timestamppb.New(reading.RecordedAt),
-		}
-
-		_, err := client.StoreReading(ctx, &proto.StoreReadingRequest{Reading: pbReading})
+		_, err := client.StoreReading(ctx, &proto.StoreReadingRequest{
+			Reading: &proto.SensorReading{
+				DeviceId:  reading.DeviceID,
+				Type:      reading.Type,
+				Value:     reading.Value,
+				Unit:      reading.Unit,
+				Timestamp: timestamppb.New(reading.RecordedAt),
+			},
+		})
 		if err != nil {
-			log.Printf("Error storing reading: %v", err)
+			slog.Error("error storing reading", "error", err)
 		}
+	}); err != nil {
+		slog.Error("failed to start ingestor", "error", err)
+		os.Exit(1)
 	}
 
-	if err := ingestor.Start(handler); err != nil {
-		log.Fatalf("Failed to start ingestor: %v", err)
-	}
-
-	// Graceful shutdown
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
-
 	<-stop
-	log.Println("Shutting down MQTT Ingestor...")
+	slog.Info("shutting down mqtt ingestor")
 }

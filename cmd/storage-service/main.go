@@ -1,8 +1,9 @@
 package main
 
 import (
-	"log"
+	"log/slog"
 	"net"
+	"os"
 
 	"github.com/k1tasun/GoEdge-Gateway/api/proto"
 	"github.com/k1tasun/GoEdge-Gateway/internal/config"
@@ -12,31 +13,31 @@ import (
 )
 
 func main() {
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	slog.SetDefault(logger)
+
 	cfg := config.Load()
+	slog.Info("starting storage service", "port", cfg.ServerPort)
 
-	log.Printf("Starting Storage Service on port %s", cfg.ServerPort)
-
-	// Initialize Database
 	db, err := postgres.NewConnection(cfg.DatabaseURL)
 	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
+		slog.Error("failed to connect to database", "error", err)
+		os.Exit(1)
 	}
 	defer db.Close()
 
-	repo := postgres.NewRepository(db)
-
-	// Setup gRPC server
 	lis, err := net.Listen("tcp", ":"+cfg.ServerPort)
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		slog.Error("failed to listen", "error", err)
+		os.Exit(1)
 	}
 
 	grpcServer := grpc.NewServer()
-	gatewayServer := server.NewGatewayServer(repo)
-	proto.RegisterStorageServiceServer(grpcServer, gatewayServer)
+	proto.RegisterStorageServiceServer(grpcServer, server.NewGatewayServer(postgres.NewRepository(db)))
 
-	log.Printf("gRPC server listening on :%s", cfg.ServerPort)
+	slog.Info("grpc server listening", "address", lis.Addr())
 	if err := grpcServer.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+		slog.Error("failed to serve", "error", err)
+		os.Exit(1)
 	}
 }

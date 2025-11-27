@@ -26,12 +26,8 @@ const (
 // StorageServiceClient is the client API for StorageService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// StorageService defines the service for storing sensor data.
 type StorageServiceClient interface {
-	// StoreReading saves a single sensor reading.
 	StoreReading(ctx context.Context, in *StoreReadingRequest, opts ...grpc.CallOption) (*StoreReadingResponse, error)
-	// StoreBatch saves multiple readings (for efficiency).
 	StoreBatch(ctx context.Context, in *StoreBatchRequest, opts ...grpc.CallOption) (*StoreBatchResponse, error)
 }
 
@@ -66,12 +62,8 @@ func (c *storageServiceClient) StoreBatch(ctx context.Context, in *StoreBatchReq
 // StorageServiceServer is the server API for StorageService service.
 // All implementations must embed UnimplementedStorageServiceServer
 // for forward compatibility.
-//
-// StorageService defines the service for storing sensor data.
 type StorageServiceServer interface {
-	// StoreReading saves a single sensor reading.
 	StoreReading(context.Context, *StoreReadingRequest) (*StoreReadingResponse, error)
-	// StoreBatch saves multiple readings (for efficiency).
 	StoreBatch(context.Context, *StoreBatchRequest) (*StoreBatchResponse, error)
 	mustEmbedUnimplementedStorageServiceServer()
 }

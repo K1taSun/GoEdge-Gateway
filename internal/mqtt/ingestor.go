@@ -3,7 +3,7 @@ package mqtt
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+	"log/slog"
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
@@ -21,10 +21,10 @@ func NewIngestor(brokerURL, clientID, topic string) (*Ingestor, error) {
 	opts.SetClientID(clientID)
 	opts.SetAutoReconnect(true)
 	opts.SetOnConnectHandler(func(c mqtt.Client) {
-		log.Printf("Connected to MQTT Broker: %s", brokerURL)
+		slog.Info("connected to mqtt broker", "url", brokerURL)
 	})
 	opts.SetConnectionLostHandler(func(c mqtt.Client, err error) {
-		log.Printf("Connection lost: %v", err)
+		slog.Warn("mqtt connection lost", "error", err)
 	})
 
 	client := mqtt.NewClient(opts)
@@ -42,16 +42,15 @@ func (i *Ingestor) Start(handler func(reading *models.SensorReading)) error {
 	token := i.client.Subscribe(i.topic, 1, func(c mqtt.Client, m mqtt.Message) {
 		var reading models.SensorReading
 		if err := json.Unmarshal(m.Payload(), &reading); err != nil {
-			log.Printf("Failed to unmarshal message: %v", err)
+			slog.Error("failed to unmarshal message", "error", err)
 			return
 		}
 
-		// Ensure timestamp is set if missing
 		if reading.RecordedAt.IsZero() {
 			reading.RecordedAt = time.Now()
 		}
 
-		log.Printf("Received reading from %s: %f %s", reading.DeviceID, reading.Value, reading.Unit)
+		slog.Debug("received reading", "device_id", reading.DeviceID, "value", reading.Value)
 		handler(&reading)
 	})
 
@@ -59,11 +58,10 @@ func (i *Ingestor) Start(handler func(reading *models.SensorReading)) error {
 		return fmt.Errorf("failed to subscribe to topic: %w", token.Error())
 	}
 
-	log.Printf("Subscribed to topic: %s", i.topic)
+	slog.Info("subscribed to topic", "topic", i.topic)
 	return nil
 }
 
 func (i *Ingestor) Close() {
 	i.client.Disconnect(250)
 }
-

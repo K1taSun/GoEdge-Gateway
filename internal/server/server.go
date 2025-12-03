@@ -6,16 +6,16 @@ import (
 
 	pb "github.com/k1tasun/GoEdge-Gateway/api/proto"
 	"github.com/k1tasun/GoEdge-Gateway/internal/models"
-	"github.com/k1tasun/GoEdge-Gateway/internal/storage/postgres"
+	"github.com/k1tasun/GoEdge-Gateway/internal/storage"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type GatewayServer struct {
 	pb.UnimplementedStorageServiceServer
-	repo *postgres.Repository
+	repo storage.Repository
 }
 
-func NewGatewayServer(repo *postgres.Repository) *GatewayServer {
+func NewGatewayServer(repo storage.Repository) *GatewayServer {
 	return &GatewayServer{repo: repo}
 }
 

@@ -24,7 +24,7 @@ func main() {
 	defer cancel()
 
 	deviceID := "e2e-test-device"
-	
+
 	// 1. Store a reading
 	log.Println("Storing reading...")
 	_, err = client.StoreReading(ctx, &proto.StoreReadingRequest{
@@ -74,4 +74,3 @@ func main() {
 		log.Fatal("E2E Test FAILED: Stored reading not found in response.")
 	}
 }
-

@@ -9,6 +9,7 @@ import "google/protobuf/timestamp.proto";
 service StorageService {
   rpc StoreReading(StoreReadingRequest) returns (StoreReadingResponse);
   rpc StoreBatch(StoreBatchRequest) returns (StoreBatchResponse);
+  rpc GetReadings(GetReadingsRequest) returns (GetReadingsResponse);
 }
 
 message SensorReading {
@@ -17,6 +18,15 @@ message SensorReading {
   double value = 3;
   google.protobuf.Timestamp timestamp = 4;
   string unit = 5;
+}
+
+message GetReadingsRequest {
+  string device_id = 1;
+  int32 limit = 2;
+}
+
+message GetReadingsResponse {
+  repeated SensorReading readings = 1;
 }
 
 message StoreReadingRequest {

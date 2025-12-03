@@ -7,6 +7,7 @@ import (
 	pb "github.com/k1tasun/GoEdge-Gateway/api/proto"
 	"github.com/k1tasun/GoEdge-Gateway/internal/models"
 	"github.com/k1tasun/GoEdge-Gateway/internal/storage/postgres"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type GatewayServer struct {
@@ -51,4 +52,25 @@ func (s *GatewayServer) StoreBatch(ctx context.Context, req *pb.StoreBatchReques
 		return &pb.StoreBatchResponse{Success: false}, nil
 	}
 	return &pb.StoreBatchResponse{Success: true, Count: int32(count)}, nil
+}
+
+func (s *GatewayServer) GetReadings(ctx context.Context, req *pb.GetReadingsRequest) (*pb.GetReadingsResponse, error) {
+	readings, err := s.repo.GetReadingsByDevice(ctx, req.DeviceId, int(req.Limit))
+	if err != nil {
+		slog.Error("failed to get readings", "error", err)
+		return nil, err
+	}
+
+	pbReadings := make([]*pb.SensorReading, len(readings))
+	for i, r := range readings {
+		pbReadings[i] = &pb.SensorReading{
+			DeviceId:  r.DeviceID,
+			Type:      r.Type,
+			Value:     r.Value,
+			Unit:      r.Unit,
+			Timestamp: timestamppb.New(r.RecordedAt),
+		}
+	}
+
+	return &pb.GetReadingsResponse{Readings: pbReadings}, nil
 }

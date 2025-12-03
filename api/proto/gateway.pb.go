@@ -98,6 +98,102 @@ func (x *SensorReading) GetUnit() string {
 	return ""
 }
 
+type GetReadingsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	DeviceId      string                 `protobuf:"bytes,1,opt,name=device_id,json=deviceId,proto3" json:"device_id,omitempty"`
+	Limit         int32                  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetReadingsRequest) Reset() {
+	*x = GetReadingsRequest{}
+	mi := &file_api_proto_gateway_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetReadingsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetReadingsRequest) ProtoMessage() {}
+
+func (x *GetReadingsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_proto_gateway_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetReadingsRequest.ProtoReflect.Descriptor instead.
+func (*GetReadingsRequest) Descriptor() ([]byte, []int) {
+	return file_api_proto_gateway_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *GetReadingsRequest) GetDeviceId() string {
+	if x != nil {
+		return x.DeviceId
+	}
+	return ""
+}
+
+func (x *GetReadingsRequest) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+type GetReadingsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Readings      []*SensorReading       `protobuf:"bytes,1,rep,name=readings,proto3" json:"readings,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetReadingsResponse) Reset() {
+	*x = GetReadingsResponse{}
+	mi := &file_api_proto_gateway_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetReadingsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetReadingsResponse) ProtoMessage() {}
+
+func (x *GetReadingsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_proto_gateway_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetReadingsResponse.ProtoReflect.Descriptor instead.
+func (*GetReadingsResponse) Descriptor() ([]byte, []int) {
+	return file_api_proto_gateway_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetReadingsResponse) GetReadings() []*SensorReading {
+	if x != nil {
+		return x.Readings
+	}
+	return nil
+}
+
 type StoreReadingRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Reading       *SensorReading         `protobuf:"bytes,1,opt,name=reading,proto3" json:"reading,omitempty"`
@@ -107,7 +203,7 @@ type StoreReadingRequest struct {
 
 func (x *StoreReadingRequest) Reset() {
 	*x = StoreReadingRequest{}
-	mi := &file_api_proto_gateway_proto_msgTypes[1]
+	mi := &file_api_proto_gateway_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -119,7 +215,7 @@ func (x *StoreReadingRequest) String() string {
 func (*StoreReadingRequest) ProtoMessage() {}
 
 func (x *StoreReadingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_gateway_proto_msgTypes[1]
+	mi := &file_api_proto_gateway_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -132,7 +228,7 @@ func (x *StoreReadingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StoreReadingRequest.ProtoReflect.Descriptor instead.
 func (*StoreReadingRequest) Descriptor() ([]byte, []int) {
-	return file_api_proto_gateway_proto_rawDescGZIP(), []int{1}
+	return file_api_proto_gateway_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *StoreReadingRequest) GetReading() *SensorReading {
@@ -152,7 +248,7 @@ type StoreReadingResponse struct {
 
 func (x *StoreReadingResponse) Reset() {
 	*x = StoreReadingResponse{}
-	mi := &file_api_proto_gateway_proto_msgTypes[2]
+	mi := &file_api_proto_gateway_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -164,7 +260,7 @@ func (x *StoreReadingResponse) String() string {
 func (*StoreReadingResponse) ProtoMessage() {}
 
 func (x *StoreReadingResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_gateway_proto_msgTypes[2]
+	mi := &file_api_proto_gateway_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -177,7 +273,7 @@ func (x *StoreReadingResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StoreReadingResponse.ProtoReflect.Descriptor instead.
 func (*StoreReadingResponse) Descriptor() ([]byte, []int) {
-	return file_api_proto_gateway_proto_rawDescGZIP(), []int{2}
+	return file_api_proto_gateway_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *StoreReadingResponse) GetSuccess() bool {
@@ -203,7 +299,7 @@ type StoreBatchRequest struct {
 
 func (x *StoreBatchRequest) Reset() {
 	*x = StoreBatchRequest{}
-	mi := &file_api_proto_gateway_proto_msgTypes[3]
+	mi := &file_api_proto_gateway_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -215,7 +311,7 @@ func (x *StoreBatchRequest) String() string {
 func (*StoreBatchRequest) ProtoMessage() {}
 
 func (x *StoreBatchRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_gateway_proto_msgTypes[3]
+	mi := &file_api_proto_gateway_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -228,7 +324,7 @@ func (x *StoreBatchRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StoreBatchRequest.ProtoReflect.Descriptor instead.
 func (*StoreBatchRequest) Descriptor() ([]byte, []int) {
-	return file_api_proto_gateway_proto_rawDescGZIP(), []int{3}
+	return file_api_proto_gateway_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *StoreBatchRequest) GetReadings() []*SensorReading {
@@ -248,7 +344,7 @@ type StoreBatchResponse struct {
 
 func (x *StoreBatchResponse) Reset() {
 	*x = StoreBatchResponse{}
-	mi := &file_api_proto_gateway_proto_msgTypes[4]
+	mi := &file_api_proto_gateway_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -260,7 +356,7 @@ func (x *StoreBatchResponse) String() string {
 func (*StoreBatchResponse) ProtoMessage() {}
 
 func (x *StoreBatchResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_proto_gateway_proto_msgTypes[4]
+	mi := &file_api_proto_gateway_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -273,7 +369,7 @@ func (x *StoreBatchResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StoreBatchResponse.ProtoReflect.Descriptor instead.
 func (*StoreBatchResponse) Descriptor() ([]byte, []int) {
-	return file_api_proto_gateway_proto_rawDescGZIP(), []int{4}
+	return file_api_proto_gateway_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *StoreBatchResponse) GetCount() int32 {
@@ -301,6 +397,11 @@ const file_api_proto_gateway_proto_rawDesc = "" +
 	"\x05value\x18\x03 \x01(\x01R\x05value\x128\n" +
 	"\ttimestamp\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x12\n" +
 	"\x04unit\x18\x05 \x01(\tR\x04unit\"G\n" +
+	"\x12GetReadingsRequest\x12\x1b\n" +
+	"\tdevice_id\x18\x01 \x01(\tR\bdeviceId\x12\x14\n" +
+	"\x05limit\x18\x02 \x01(\x05R\x05limit\"I\n" +
+	"\x13GetReadingsResponse\x122\n" +
+	"\breadings\x18\x01 \x03(\v2\x16.gateway.SensorReadingR\breadings\"G\n" +
 	"\x13StoreReadingRequest\x120\n" +
 	"\areading\x18\x01 \x01(\v2\x16.gateway.SensorReadingR\areading\"J\n" +
 	"\x14StoreReadingResponse\x12\x18\n" +
@@ -310,11 +411,12 @@ const file_api_proto_gateway_proto_rawDesc = "" +
 	"\breadings\x18\x01 \x03(\v2\x16.gateway.SensorReadingR\breadings\"D\n" +
 	"\x12StoreBatchResponse\x12\x14\n" +
 	"\x05count\x18\x01 \x01(\x05R\x05count\x12\x18\n" +
-	"\asuccess\x18\x02 \x01(\bR\asuccess2\xa4\x01\n" +
+	"\asuccess\x18\x02 \x01(\bR\asuccess2\xee\x01\n" +
 	"\x0eStorageService\x12K\n" +
 	"\fStoreReading\x12\x1c.gateway.StoreReadingRequest\x1a\x1d.gateway.StoreReadingResponse\x12E\n" +
 	"\n" +
-	"StoreBatch\x12\x1a.gateway.StoreBatchRequest\x1a\x1b.gateway.StoreBatchResponseB-Z+github.com/k1tasun/GoEdge-Gateway/api/protob\x06proto3"
+	"StoreBatch\x12\x1a.gateway.StoreBatchRequest\x1a\x1b.gateway.StoreBatchResponse\x12H\n" +
+	"\vGetReadings\x12\x1b.gateway.GetReadingsRequest\x1a\x1c.gateway.GetReadingsResponseB-Z+github.com/k1tasun/GoEdge-Gateway/api/protob\x06proto3"
 
 var (
 	file_api_proto_gateway_proto_rawDescOnce sync.Once
@@ -328,28 +430,33 @@ func file_api_proto_gateway_proto_rawDescGZIP() []byte {
 	return file_api_proto_gateway_proto_rawDescData
 }
 
-var file_api_proto_gateway_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_api_proto_gateway_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_api_proto_gateway_proto_goTypes = []any{
 	(*SensorReading)(nil),         // 0: gateway.SensorReading
-	(*StoreReadingRequest)(nil),   // 1: gateway.StoreReadingRequest
-	(*StoreReadingResponse)(nil),  // 2: gateway.StoreReadingResponse
-	(*StoreBatchRequest)(nil),     // 3: gateway.StoreBatchRequest
-	(*StoreBatchResponse)(nil),    // 4: gateway.StoreBatchResponse
-	(*timestamppb.Timestamp)(nil), // 5: google.protobuf.Timestamp
+	(*GetReadingsRequest)(nil),    // 1: gateway.GetReadingsRequest
+	(*GetReadingsResponse)(nil),   // 2: gateway.GetReadingsResponse
+	(*StoreReadingRequest)(nil),   // 3: gateway.StoreReadingRequest
+	(*StoreReadingResponse)(nil),  // 4: gateway.StoreReadingResponse
+	(*StoreBatchRequest)(nil),     // 5: gateway.StoreBatchRequest
+	(*StoreBatchResponse)(nil),    // 6: gateway.StoreBatchResponse
+	(*timestamppb.Timestamp)(nil), // 7: google.protobuf.Timestamp
 }
 var file_api_proto_gateway_proto_depIdxs = []int32{
-	5, // 0: gateway.SensorReading.timestamp:type_name -> google.protobuf.Timestamp
-	0, // 1: gateway.StoreReadingRequest.reading:type_name -> gateway.SensorReading
-	0, // 2: gateway.StoreBatchRequest.readings:type_name -> gateway.SensorReading
-	1, // 3: gateway.StorageService.StoreReading:input_type -> gateway.StoreReadingRequest
-	3, // 4: gateway.StorageService.StoreBatch:input_type -> gateway.StoreBatchRequest
-	2, // 5: gateway.StorageService.StoreReading:output_type -> gateway.StoreReadingResponse
-	4, // 6: gateway.StorageService.StoreBatch:output_type -> gateway.StoreBatchResponse
-	5, // [5:7] is the sub-list for method output_type
-	3, // [3:5] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	7, // 0: gateway.SensorReading.timestamp:type_name -> google.protobuf.Timestamp
+	0, // 1: gateway.GetReadingsResponse.readings:type_name -> gateway.SensorReading
+	0, // 2: gateway.StoreReadingRequest.reading:type_name -> gateway.SensorReading
+	0, // 3: gateway.StoreBatchRequest.readings:type_name -> gateway.SensorReading
+	3, // 4: gateway.StorageService.StoreReading:input_type -> gateway.StoreReadingRequest
+	5, // 5: gateway.StorageService.StoreBatch:input_type -> gateway.StoreBatchRequest
+	1, // 6: gateway.StorageService.GetReadings:input_type -> gateway.GetReadingsRequest
+	4, // 7: gateway.StorageService.StoreReading:output_type -> gateway.StoreReadingResponse
+	6, // 8: gateway.StorageService.StoreBatch:output_type -> gateway.StoreBatchResponse
+	2, // 9: gateway.StorageService.GetReadings:output_type -> gateway.GetReadingsResponse
+	7, // [7:10] is the sub-list for method output_type
+	4, // [4:7] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_api_proto_gateway_proto_init() }
@@ -363,7 +470,7 @@ func file_api_proto_gateway_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_proto_gateway_proto_rawDesc), len(file_api_proto_gateway_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
